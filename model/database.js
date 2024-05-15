@@ -1,7 +1,7 @@
 const sqlite3 = require("sqlite3").verbose();
 
 //Creates the different tables and inits the database.
-function createDatabase() {
+function createDatabaseAndTables() {
   //Inits database.
   const db = new sqlite3.Database("./model/database.db", (error) => {
     if (error) {
@@ -33,4 +33,4 @@ function createDatabase() {
   return db;
 }
 
-module.exports = { createDatabase };
+module.exports = { createDatabaseAndTables };

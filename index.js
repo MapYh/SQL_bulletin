@@ -10,4 +10,4 @@ app.listen(PORT, URL, () => {
   console.log(`Listening for http://${URL}:${PORT}`);
 });
 
-const db = database.createDatabase();
+const db = database.createDatabaseAndTables();
