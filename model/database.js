@@ -29,6 +29,8 @@ function createDatabase() {
         }
       );
   });
+
+  return db;
 }
 
 module.exports = { createDatabase };
