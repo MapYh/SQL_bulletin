@@ -3,10 +3,12 @@ const { db } = require("../database/db.js");
 const router = Router();
 router.use(Router.json());
 
+const { createChannel } = require("../controllers/channel-controller.js");
+
 /*-------GET----------- */
 
 //GET all channels by channel name.
-router.get("/channels", (req, res) => {
+router.get("/", (req, res) => {
   db.all("SELECT channel_name FROM channels", function (error, rows) {
     if (error) {
       console.error(error);
@@ -15,5 +17,7 @@ router.get("/channels", (req, res) => {
     }
   });
 });
+
+router.post("/", createChannel);
 
 module.exports = router;
