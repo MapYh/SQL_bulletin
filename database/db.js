@@ -9,12 +9,8 @@ function initDatabase() {
   let sql_user = `CREATE TABLE IF NOT EXISTS "users" (
     user_id INTEGER PRIMARY KEY, 
     user_name VARCHAR(255),
-    user_lastname VARCHAR(255), 
-    user_nickname VARCHAR(255),
-    user_password BLOB,
-    user_location TEXT,
-    user_email TEXT UNIQUE
-    )`;
+    user_password TEXT
+   )`;
 
   let sql_channels = `CREATE TABLE IF NOT EXISTS "channels" (
     channel_id INTEGER PRIMARY KEY, 
