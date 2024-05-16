@@ -10,9 +10,8 @@ const URL = "127.0.0.1";
 app.use(express.json());
 
 app.use("/api/user", userRoutes);
-/* 
+
 app.use("/api/channels", channelsRoutes);
-*/
 
 app.listen(PORT, URL, () => {
   console.log(`listenting to http://${URL}:${PORT}`);

@@ -1,7 +1,9 @@
-/* const { Router } = require("express");
+const { Router } = require("express");
+const { subscription } = require("../controllers/subscription-controller");
+const { auth } = require("../middleware/auth");
 
 const router = Router();
 
-router.post("/", createChannel);
+router.post("/subscribe", auth,  subscription);
 
-module.exports = router; */
+module.exports = router;
