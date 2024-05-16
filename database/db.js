@@ -1,11 +1,11 @@
 const sqlite = require("sqlite3").verbose();
 
-function initDatabase() {
-  const db = new sqlite.Database("./database/database.db", (error) => {
-    if (error) return console.log(error);
-    console.log("Connected to database");
-  });
+const db = new sqlite.Database("./database/database.db", (error) => {
+  if (error) return console.log(error);
+  console.log("Connected to database");
+});
 
+function initDatabase() {
   let sql_user = `CREATE TABLE IF NOT EXISTS "users" (
     user_id INTEGER PRIMARY KEY, 
     user_name VARCHAR(255),
@@ -29,4 +29,4 @@ function initDatabase() {
   return db;
 }
 
-module.exports = { initDatabase };
+module.exports = { initDatabase, db };
