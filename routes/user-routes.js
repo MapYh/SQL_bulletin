@@ -11,9 +11,9 @@ router.post("/login",  login); */
 router.get("/users", (req, res) => {
   db.all("SELECT user_name FROM users", function (error, rows) {
     if (error) {
-      console.error(error);
+      res.status(400).json({ succcess: false, Message: error });
     } else {
-      res.status(200).json(rows);
+      res.status(200).json({ succcess: true, Users: rows });
     }
   });
 });

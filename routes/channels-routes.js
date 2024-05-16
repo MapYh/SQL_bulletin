@@ -9,9 +9,9 @@ router.use(Router.json());
 router.get("/channels", (req, res) => {
   db.all("SELECT channel_name FROM channels", function (error, rows) {
     if (error) {
-      console.error(error);
+      res.status(400).json({ succcess: false, Message: error });
     } else {
-      res.status(200).json(rows);
+      res.status(200).json({ succcess: true, Channels: rows });
     }
   });
 });

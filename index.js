@@ -11,11 +11,11 @@ const URL = "127.0.0.1";
 app.use(express.json());
 
 app.use("/api/user", userRoutes);
-/* 
+
 app.use("/api/channels", channelsRoutes);
 //För att testa GET routerna
 app.use("/api/test", tests);
 
 app.listen(PORT, URL, () => {
-  console.log(`listenting to http://${URL}:${PORT}`);
+  console.log(`listening to http://${URL}:${PORT}`);
 });
