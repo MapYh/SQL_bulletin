@@ -23,7 +23,7 @@ function initDatabase() {
     db.run(sql_user, (error) => {
       if (error) console.error("Error creating users table:", error.message);
     }).run(sql_channels, (error) => {
-      if (error) console.error("Error creating users table:", error.message);
+      if (error) console.error("Error creating channels table:", error.message);
     });
   });
   return db;
