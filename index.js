@@ -19,6 +19,7 @@ app.listen(PORT, URL, () => {
 
 /*-------GET----------- */
 
+//GET all channels by channel name.
 app.get("/api/channels", (req, res) => {
   db.all("SELECT channel_name FROM channels", function (error, rows) {
     if (error) {
@@ -29,6 +30,7 @@ app.get("/api/channels", (req, res) => {
   });
 });
 
+//GET all users by username.
 app.get("/api/user", (req, res) => {
   db.all("SELECT user_name FROM users", function (error, rows) {
     if (error) {
@@ -51,6 +53,40 @@ app.post("/api/channels", (req, res) => {
         console.error(error);
       } else {
         res.status(200).json({ success: true, message: "Added a channel." });
+      }
+    }
+  );
+});
+
+app.post("/api/user", (req, res) => {
+  const {
+    user_id,
+    user_name,
+    user_lastname,
+    user_nickname,
+    user_password,
+    user_location,
+    user_email,
+  } = req.body;
+  db.run(
+    "INSERT INTO users ( user_id, user_name, user_lastname, user_nickname, user_password, user_location, user_email) VALUES (?, ?, ?, ?, ?, ?, ?) ",
+    [
+      user_id,
+      user_name,
+      user_lastname,
+      user_nickname,
+      user_password,
+      user_location,
+      user_email,
+    ],
+    function (error, rows) {
+      if (error) {
+        console.error(error);
+      } else {
+        res.status(200).json({
+          success: true,
+          message: `Added user ${user_name} to the database.`,
+        });
       }
     }
   );
