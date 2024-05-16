@@ -12,9 +12,20 @@ function initDatabase() {
     user_password TEXT
    )`;
 
+   let sql_subscription = ` CREATE TABLE IF NOT EXISTS subscriptions (
+    subscription_id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    channels_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (channels_id) REFERENCES users(channels_id)
+   )`
+
   db.serialize(() => {
     db.run(sql_user, (error) => {
       if (error) console.error("Error creating users table:", error.message);
+    });
+    db.run(sql_subscription, (error) => {
+      if (error) console.error("Error creating subcription:", error.message);
     });
   });
   return db;
