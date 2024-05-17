@@ -23,4 +23,42 @@ async function subscribeUserToChannel(user_id, channel_id) {
   });
 }
 
-module.exports = { subscribeUserToChannel };
+async function getUserId(user_id) {
+  return new Promise((resolve, reject) => {
+    db.get("SELECT * FROM users WHERE user_id = ?", [user_id], (err, row) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        resolve(row);
+      }
+    });
+  });
+}
+async function getChannelId(channel_id) {
+  return new Promise((resolve, reject) => {
+    db.get("SELECT * FROM channels WHERE channel_id = ?", [channel_id], (err, row) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        resolve(row);
+      }
+    });
+  });
+}
+
+async function checkSubscription(user_id, channel_id) {
+  return new Promise((resolve, reject) => {
+    db.get("SELECT * FROM subscriptions WHERE user_id = ? AND channel_id = ?", [user_id, channel_id], (err, row) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        resolve(row);
+      }
+    });
+  });
+}
+
+module.exports = { subscribeUserToChannel, getUserId, getChannelId, checkSubscription };
