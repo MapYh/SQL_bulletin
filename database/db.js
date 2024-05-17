@@ -34,6 +34,15 @@ function initDatabase() {
     FOREIGN KEY(channel_owner_id) REFERENCES users(user_id)
     )`;
 
+    let sql_messages = `CREATE TABLE IF NOT EXISTS messages (
+      message_id INTEGER PRIMARY KEY, 
+      user_id INTEGER,
+      channel_id INTEGER,
+      content TEXT,
+      FOREIGN KEY (user_id) REFERENCES users(user_id),
+      FOREIGN KEY (channel_id) REFERENCES channels(channel_id)
+    )`;
+ 
   db.serialize(() => {
     db.run(sql_user, (error) => {
       if (error) console.error("Error creating users table:", error.message);
@@ -47,6 +56,9 @@ function initDatabase() {
 
     db.run(sql_subscription, (error) => {
       if (error) console.error("Error creating subscriptions table:", error.message);
+    });
+    db.run(sql_messages, (error) => {
+      if (error) console.error("Error creating messages table:", error.message);
     });
    
 
