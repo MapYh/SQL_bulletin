@@ -1,11 +1,13 @@
 const { Router } = require("express");
 const { subscription } = require("../controllers/subscription-controller");
 const { auth } = require("../middleware/auth");
-
-const router = Router();
-router.use(Router.json());
-
 const { createChannel } = require("../controllers/channel-controller.js");
+const router = Router();
+/* router.use(Router.json()); */
+
+router.post("/subscribe", auth,  subscription);
+
+
 
 /*-------GET----------- */
 

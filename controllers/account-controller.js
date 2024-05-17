@@ -11,7 +11,7 @@ async function signup(req, res) {
 
   try {
     const existingUser = await getUser(username);
-    console.log("Existing User:", existingUser);
+
     if (existingUser.length > 0) {
       return res.status(418).json({ error: "Username already exists" });
     }
