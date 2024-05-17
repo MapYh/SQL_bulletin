@@ -1,12 +1,18 @@
-const Router = require("express");
-const { db } = require("../database/db.js");
+const { Router } = require("express");
+const { subscription } = require("../controllers/subscription-controller");
+const { auth } = require("../middleware/auth");
+const { createChannel } = require("../controllers/channel-controller.js");
 const router = Router();
-router.use(Router.json());
+/* router.use(Router.json()); */
+
+router.post("/subscribe", auth,  subscription);
+
+
 
 /*-------GET----------- */
 
 //GET all channels by channel name.
-router.get("/channels", (req, res) => {
+router.get("/", (req, res) => {
   db.all("SELECT channel_name FROM channels", function (error, rows) {
     if (error) {
       console.error(error);
@@ -16,4 +22,6 @@ router.get("/channels", (req, res) => {
   });
 });
 
-module.exports = router;
+router.post("/subscribe", auth,  subscription);
+
+module.exports = router; 
