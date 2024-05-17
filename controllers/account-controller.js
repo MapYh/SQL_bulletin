@@ -10,6 +10,12 @@ async function signup(req, res) {
   }
 
   try {
+    const existingUser = await getUser(username);
+
+    if (existingUser.length > 0) {
+      return res.status(418).json({ error: "Username already exists" });
+    }
+
     const hashedPassword = await hashPassword(password);
     await createAccount(username, hashedPassword);
     res.status(200).json({
@@ -21,7 +27,6 @@ async function signup(req, res) {
     res.status(500).json({ message: "Error creating account" });
   }
 }
-
 async function login(req, res) {
   const { username, password } = req.body;
 

@@ -1,9 +1,13 @@
-const Router = require("express");
-const { db } = require("../database/db.js");
-const router = Router();
-router.use(Router.json());
-
+const { Router } = require("express");
+const { subscription } = require("../controllers/subscription-controller");
+const { auth } = require("../middleware/auth");
 const { createChannel } = require("../controllers/channel-controller.js");
+const router = Router();
+/* router.use(Router.json()); */
+
+router.post("/subscribe", auth,  subscription);
+
+
 
 /*-------GET----------- */
 
@@ -18,6 +22,6 @@ router.get("/", (req, res) => {
   });
 });
 
-router.post("/", createChannel);
+router.post("/subscribe", auth,  subscription);
 
-module.exports = router;
+module.exports = router; 
