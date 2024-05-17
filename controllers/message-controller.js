@@ -4,9 +4,9 @@ const { getChannelId, getUserId, checkSubscription } = require("../models/subscr
 async function postMessage (req, res) {
  const { user_id, channel_id, title, content} = req.body;
 
- if (!user_id || !channel_id || !title || !content) {
-    return res.status(400).json({ error: "User ID, Channel ID, title and content are required" });
-  }
+ if (!user_id || !channel_id || !title || !content || title.length > 50) {
+  return res.status(400).json({ error: "User ID, Channel ID, title and content are required, and title must be less than 50 characters" });
+}
 
   try {
     const userExists = await getUserId(user_id);
