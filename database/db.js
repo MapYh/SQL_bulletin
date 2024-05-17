@@ -38,6 +38,7 @@ function initDatabase() {
       message_id INTEGER PRIMARY KEY, 
       user_id INTEGER,
       channel_id INTEGER,
+      title TEXT,
       content TEXT,
       FOREIGN KEY (user_id) REFERENCES users(user_id),
       FOREIGN KEY (channel_id) REFERENCES channels(channel_id)
@@ -60,6 +61,8 @@ function initDatabase() {
     db.run(sql_messages, (error) => {
       if (error) console.error("Error creating messages table:", error.message);
     });
+    
+
    
 
   });
