@@ -2,12 +2,9 @@ const { Router } = require("express");
 const { subscription } = require("../controllers/subscription-controller");
 const { auth } = require("../middleware/auth");
 const { createChannel } = require("../controllers/channel-controller.js");
+const { unsubscription } = require("../controllers/unsubscription-controller.js");
 const router = Router();
 /* router.use(Router.json()); */
-
-router.post("/subscribe", auth,  subscription);
-
-
 
 /*-------GET----------- */
 
@@ -22,6 +19,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.post("/subscribe", auth,  subscription);
+router.post("/subscribe", auth, subscription);
+router.post("/unsubscribe", auth, unsubscription);
 
-module.exports = router; 
+module.exports = router;
