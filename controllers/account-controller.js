@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { createAccount, getUser, getUsers } = require("../models/account-model");
 const { hashPassword, comparePasswords } = require("../utils/bcrypt");
+const { getUserId } = require("../models/subscription-model");
 
 async function signup(req, res) {
   const { username, password } = req.body;
@@ -88,4 +89,18 @@ async function getAllUsers(req, res) {
   }
 }
 
-module.exports = { signup, login, getAllUsers };
+async function getUserById(req, res) {
+  const { user_id } = req.body;
+  try {
+    const user = await getUserId(user_id);
+    res.status(200).json({
+      message: "Success",
+      User: user,
+    });
+  } catch (error) {
+    console.error("Error could not find user", error);
+    res.status(500).send("Internal server error");
+  }
+}
+
+module.exports = { signup, login, getAllUsers, getUserById };
