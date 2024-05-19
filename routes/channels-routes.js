@@ -18,7 +18,7 @@ const router = Router();
 
 /*-------GET----------- */
 
-router.get("/", getAllChannels);
+router.get("/", auth, getAllChannels);
 router.post("/subscribe", auth, subscription);
 router.post("/unsubscribe", auth, unsubscription);
 router.post("/post", auth, postMessage);

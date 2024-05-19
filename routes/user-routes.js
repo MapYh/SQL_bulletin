@@ -12,6 +12,6 @@ router.use(Router.json());
 
 router.post("/signup", signup);
 router.post("/login", login);
-router.get("/users", getAllUsers);
+router.get("/users", auth, getAllUsers);
 
 module.exports = router;
