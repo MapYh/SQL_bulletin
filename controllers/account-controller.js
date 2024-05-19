@@ -1,12 +1,14 @@
 const jwt = require("jsonwebtoken");
-const { createAccount, getUser } = require("../models/account-model");
+const { createAccount, getUser, getUsers } = require("../models/account-model");
 const { hashPassword, comparePasswords } = require("../utils/bcrypt");
 
 async function signup(req, res) {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ error: "Username and password are missing or incorrect" });
+    return res
+      .status(400)
+      .json({ error: "Username and password are missing or incorrect" });
   }
 
   try {
@@ -31,7 +33,9 @@ async function login(req, res) {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ error: "Username and password are missing or incorrect" });
+    return res
+      .status(400)
+      .json({ error: "Username and password are missing or incorrect" });
   }
 
   try {
@@ -43,12 +47,19 @@ async function login(req, res) {
 
     const userData = user[0];
 
-    const validPassword = await comparePasswords(password, userData.user_password);
+    const validPassword = await comparePasswords(
+      password,
+      userData.user_password
+    );
 
     if (validPassword) {
-      const token = jwt.sign({ id: userData.user_id, username: userData.user_name }, process.env.JWT_SECRET, {
-        expiresIn: 600,
-      });
+      const token = jwt.sign(
+        { id: userData.user_id, username: userData.user_name },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 600,
+        }
+      );
 
       res.status(200).json({
         status: "success",
@@ -64,4 +75,17 @@ async function login(req, res) {
   }
 }
 
-module.exports = { signup, login };
+async function getAllUsers(req, res) {
+  try {
+    const users = await getUsers();
+    res.status(200).json({
+      message: "Success",
+      Users: users,
+    });
+  } catch (error) {
+    console.error("Error could not find users", error);
+    res.status(500).send("Internal server error");
+  }
+}
+
+module.exports = { signup, login, getAllUsers };
