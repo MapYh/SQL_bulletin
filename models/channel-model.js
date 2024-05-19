@@ -18,4 +18,32 @@ function addNewChannel(channel_name, channel_owner_id) {
   });
 }
 
-module.exports = { addNewChannel };
+function getChannelIdByMessageId(message_id) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT channel_id FROM messages WHERE message_id = ?`, [message_id], (err, row) => {
+      if (err) {
+        console.error("Error executing query:", err);
+        reject(err);
+      } else {
+        resolve(row ? row.channel_id : null);
+      }
+    });
+  });
+}
+
+function isChannelOwner(user_id, channel_id) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT channel_owner_id FROM channels WHERE channel_id = ?`, [channel_id], (err, row) => {
+      if (err) {
+        console.error("Error executing query:", err);
+        reject(err);
+      } else {
+        const isOwner = row && row.channel_owner_id === user_id;
+
+        resolve(isOwner);
+      }
+    });
+  });
+}
+
+module.exports = { addNewChannel, isChannelOwner, getChannelIdByMessageId };
