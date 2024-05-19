@@ -1,12 +1,14 @@
-const { insertMessage } = require("../models/message-model");
+const { insertMessage, getMessagesByChannel } = require("../models/message-model");
 const { getChannelId, getUserId, checkSubscription } = require("../models/subscription-model");
 
-async function postMessage (req, res) {
- const { user_id, channel_id, title, content} = req.body;
+async function postMessage(req, res) {
+  const { user_id, channel_id, title, content } = req.body;
 
- if (!user_id || !channel_id || !title || !content || title.length > 50) {
-  return res.status(400).json({ error: "User ID, Channel ID, title and content are required, and title must be less than 50 characters" });
-}
+  if (!user_id || !channel_id || !title || !content || title.length > 50) {
+    return res.status(400).json({
+      error: "User ID, Channel ID, title and content are required, and title must be less than 50 characters",
+    });
+  }
 
   try {
     const userExists = await getUserId(user_id);
@@ -19,10 +21,10 @@ async function postMessage (req, res) {
       return res.status(404).json({ error: "Channel not found" });
     }
 
-    const isUserSubscribed = await checkSubscription(user_id, channel_id)
+    const isUserSubscribed = await checkSubscription(user_id, channel_id);
 
     if (!isUserSubscribed) {
-        return res.status(403).json({error: "User must be subscribed to post a message on the channel"})
+      return res.status(403).json({ error: "User must be subscribed to post a message on the channel" });
     }
 
     await insertMessage(user_id, channel_id, title, content);
@@ -33,4 +35,21 @@ async function postMessage (req, res) {
   }
 }
 
-module.exports = { postMessage };
+async function getMessages(req, res) {
+  try {
+    const channel_id = req.params.id;
+    const user_id = req.user.id;
+    const isUserSubscribed = await checkSubscription(user_id, channel_id);
+
+    if (!isUserSubscribed) {
+      return res.status(403).json({ error: "User must be subscribed to channel to see this content" });
+    }
+    const messages = await getMessagesByChannel(channel_id);
+    res.status(200).json(messages);
+  } catch (error) {
+    console.error("Error retrieving messages", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+module.exports = { postMessage, getMessages };

@@ -3,7 +3,7 @@ const { subscription } = require("../controllers/subscription-controller");
 const { auth } = require("../middleware/auth");
 const { createChannel } = require("../controllers/channel-controller.js");
 const { unsubscription } = require("../controllers/unsubscription-controller.js");
-const { postMessage } = require("../controllers/message-controller.js");
+const { postMessage, getMessages } = require("../controllers/message-controller.js");
 const router = Router();
 /* router.use(Router.json()); */
 
@@ -23,5 +23,6 @@ router.get("/", (req, res) => {
 router.post("/subscribe", auth, subscription);
 router.post("/unsubscribe", auth, unsubscription);
 router.post("/post", auth, postMessage);
+router.get("/:id/posts", auth,  getMessages);
 
 module.exports = router;
