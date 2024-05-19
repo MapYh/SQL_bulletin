@@ -18,4 +18,16 @@ function addNewChannel(channel_name, channel_owner_id) {
   });
 }
 
-module.exports = { addNewChannel };
+function getChannels() {
+  return new Promise((resolve, reject) => {
+    db.all("SELECT channel_name FROM channels", function (error, rows) {
+      if (error) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
+module.exports = { addNewChannel, getChannels };

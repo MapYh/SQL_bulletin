@@ -1,4 +1,4 @@
-const { addNewChannel } = require("../models/channel-model");
+const { addNewChannel, getChannels } = require("../models/channel-model");
 
 async function createChannel(req, res) {
   const { channel_name, channel_owner_id } = req.body;
@@ -20,4 +20,15 @@ async function createChannel(req, res) {
   }
 }
 
-module.exports = { createChannel };
+async function getAllChannels(req, res) {
+  const result = await getChannels();
+  try {
+    const result = await getChannels();
+    res.status(201).json({ message: "success!", Channels: result });
+  } catch (error) {
+    console.error("error getting users:", error);
+    res.status(500).json({ error: "internal server error" });
+  }
+}
+
+module.exports = { createChannel, getAllChannels };
