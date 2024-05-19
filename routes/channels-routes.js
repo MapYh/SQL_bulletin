@@ -14,9 +14,6 @@ const {
   updateMessage,
 } = require("../controllers/message-controller.js");
 const router = Router();
-/* router.use(Router.json()); */
-
-/*-------GET----------- */
 
 router.get("/", auth, getAllChannels);
 router.post("/subscribe", auth, subscription);
