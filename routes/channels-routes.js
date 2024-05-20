@@ -35,7 +35,7 @@ router.get("/", (req, res) => {
 //POST a new channel
 router.post("/", createChannel);
 
-//DELETE a channel by channel_id
+//DELETE a channel
 router.delete("/", removeChannel);
 
 router.post("/subscribe", auth, subscription);

@@ -45,8 +45,12 @@ function isChannelOwner(user_id, channel_id) {
           console.error("Error executing query:", err);
           reject(err);
         } else {
-          const isOwner = row && row.channel_owner_id === user_id;
-
+          console.log(`${channel_id}, found owner:`, row);
+          const channelOwnerId = row ? String(row.channel_owner_id) : null;
+          const userId = String(user_id);
+          const isOwner = channelOwnerId === userId;
+          console.log(`Expected owner ID: ${userId}`);
+          console.log(`Actual owner ID: ${channelOwnerId}`);
           resolve(isOwner);
         }
       }
@@ -54,30 +58,17 @@ function isChannelOwner(user_id, channel_id) {
   });
 }
 
-function deleteChannel(user_id, channel_id) {
+function deleteChannel(channel_id) {
   return new Promise((resolve, reject) => {
-    db.get(
-      `SELECT channel_id FROM channels WHERE channel_id = ?`,
+    db.run(
+      `DELETE FROM channels WHERE channel_id = ?`,
       [channel_id],
-      function (err, row) {
+      function (err) {
         if (err) {
-          console.error("error executing query:", err.message);
+          console.error("couldn't delete channel", err.message);
           reject(err);
-        } else if (!row) {
-          reject(new Error("couldn't find this channel"));
         } else {
-          db.run(
-            `DELETE FROM channels WHERE channel_id = ?`,
-            [channel_id],
-            function (err) {
-              if (err) {
-                console.error("couldn't delete channel", err.message);
-                reject(err);
-              } else {
-                resolve({ message: "channel deleted successfully" });
-              }
-            }
-          );
+          resolve({ message: "channel deleted successfully" });
         }
       }
     );
