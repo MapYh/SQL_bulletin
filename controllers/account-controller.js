@@ -91,14 +91,23 @@ async function getAllUsers(req, res) {
 
 async function getUserById(req, res) {
   const { user_id } = req.body;
+
   try {
     const user = await getUserId(user_id);
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ error: "User with that user_id not found" });
+    }
+
     res.status(200).json({
       message: "Success",
-      User: user,
+      user_id: user.user_id,
+      user_name: user.user_name,
     });
   } catch (error) {
-    console.error("Error could not find user", error);
+    console.error("Error: could not find user", error);
     res.status(500).send("Internal server error");
   }
 }
