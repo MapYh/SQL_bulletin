@@ -25,7 +25,7 @@ async function createChannel(req, res) {
 }
 
 async function removeChannel(req, res) {
-  const { channel_id } = req.body;
+  const { channel_id, user_id } = req.body;
   const isOwner = await isChannelOwner(user_id, channel_id);
 
   if (!isOwner) {

@@ -1,4 +1,6 @@
 const { Router } = require("express");
+const database = require("../database/db");
+const db = database.initDatabase();
 const { subscription } = require("../controllers/subscription-controller");
 const { auth } = require("../middleware/auth");
 const {
@@ -31,10 +33,10 @@ router.get("/", (req, res) => {
 });
 
 //POST a new channel
-router.post("/", auth, createChannel);
+router.post("/", createChannel);
 
 //DELETE a channel by channel_id
-router.delete("/", auth, removeChannel);
+router.delete("/", removeChannel);
 
 router.post("/subscribe", auth, subscription);
 router.post("/unsubscribe", auth, unsubscription);
