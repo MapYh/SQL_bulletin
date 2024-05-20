@@ -54,7 +54,7 @@ function isChannelOwner(user_id, channel_id) {
   });
 }
 
-function deleteChannel(channel_id) {
+function deleteChannel(user_id, channel_id) {
   return new Promise((resolve, reject) => {
     db.get(
       `SELECT channel_id FROM channels WHERE channel_id = ?`,

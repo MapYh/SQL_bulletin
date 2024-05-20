@@ -1,4 +1,8 @@
-const { addNewChannel, deleteChannel } = require("../models/channel-model");
+const {
+  addNewChannel,
+  deleteChannel,
+  isChannelOwner,
+} = require("../models/channel-model");
 
 async function createChannel(req, res) {
   const { channel_name, channel_owner_id } = req.body;
@@ -22,6 +26,13 @@ async function createChannel(req, res) {
 
 async function removeChannel(req, res) {
   const { channel_id } = req.body;
+  const isOwner = await isChannelOwner(user_id, channel_id);
+
+  if (!isOwner) {
+    return res
+      .status(403)
+      .json({ error: " user is not authorized to delete this channel" });
+  }
 
   if (!channel_id) {
     return res.status(400).json({
