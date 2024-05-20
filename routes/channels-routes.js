@@ -1,7 +1,12 @@
 const { Router } = require("express");
+const database = require("../database/db");
+const db = database.initDatabase();
 const { subscription } = require("../controllers/subscription-controller");
 const { auth } = require("../middleware/auth");
-const { createChannel } = require("../controllers/channel-controller.js");
+const {
+  createChannel,
+  removeChannel,
+} = require("../controllers/channel-controller.js");
 const {
   unsubscription,
 } = require("../controllers/unsubscription-controller.js");
@@ -27,7 +32,11 @@ router.get("/", (req, res) => {
   });
 });
 
+//POST a new channel
 router.post("/", createChannel);
+
+//DELETE a channel
+router.delete("/", removeChannel);
 
 router.post("/subscribe", auth, subscription);
 router.post("/unsubscribe", auth, unsubscription);
