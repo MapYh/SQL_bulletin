@@ -54,30 +54,34 @@ function isChannelOwner(user_id, channel_id) {
   });
 }
 
-function deleteChannel(user_id, channel_id) {
+function deleteChannel(channel_id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      `DELETE FROM channels WHERE channel_id = ?`,
+      [channel_id],
+      function (err) {
+        if (err) {
+          console.error("Couldn't delete channel:", err.message);
+          reject(err);
+        } else {
+          resolve({ message: "Channel deleted successfully" });
+        }
+      }
+    );
+  });
+}
+
+async function getChannelId(channel_id) {
   return new Promise((resolve, reject) => {
     db.get(
-      `SELECT channel_id FROM channels WHERE channel_id = ?`,
+      "SELECT * FROM channels WHERE channel_id = ?",
       [channel_id],
-      function (err, row) {
+      (err, row) => {
         if (err) {
-          console.error("error executing query:", err.message);
+          console.error(err);
           reject(err);
-        } else if (!row) {
-          reject(new Error("couldn't find this channel"));
         } else {
-          db.run(
-            `DELETE FROM channels WHERE channel_id = ?`,
-            [channel_id],
-            function (err) {
-              if (err) {
-                console.error("couldn't delete channel", err.message);
-                reject(err);
-              } else {
-                resolve({ message: "channel deleted successfully" });
-              }
-            }
-          );
+          resolve(row);
         }
       }
     );
@@ -89,4 +93,5 @@ module.exports = {
   isChannelOwner,
   getChannelIdByMessageId,
   deleteChannel,
+  getChannelId,
 };

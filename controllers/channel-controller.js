@@ -2,7 +2,10 @@ const {
   addNewChannel,
   deleteChannel,
   isChannelOwner,
+  getChannelId,
 } = require("../models/channel-model");
+
+const { getUserId } = require("../models/subscription-model");
 
 async function createChannel(req, res) {
   const { channel_name, channel_owner_id } = req.body;
@@ -11,6 +14,12 @@ async function createChannel(req, res) {
     return res.status(400).json({
       error: "required fields channel_name and channel_owner_id missing",
     });
+  }
+
+  //check that the userId exist
+  const userExists = await getUserId(channel_owner_id);
+  if (!userExists) {
+    return res.status(404).json({ error: "User not found" });
   }
 
   try {
@@ -26,30 +35,37 @@ async function createChannel(req, res) {
 
 async function removeChannel(req, res) {
   const { channel_id, user_id } = req.body;
-  const isOwner = await isChannelOwner(user_id, channel_id);
 
+  //check that channel_id exists in db
+  const channelExists = await getChannelId(channel_id);
+  if (!channelExists) {
+    return res.status(404).json({ error: "Channel not found" });
+  }
+
+  //check that user_id exits in db -- WORKS
+  const userExists = await getUserId(user_id);
+  if (!userExists) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  //check that the owner id created the channel
+  const isOwner = await isChannelOwner(user_id, channel_id);
   if (!isOwner) {
     return res
       .status(403)
       .json({ error: " user is not authorized to delete this channel" });
   }
 
-  if (!channel_id) {
-    return res.status(400).json({
-      error: "required field channel_id is missing",
-    });
-  }
-
   try {
+    //try to delete the channel
     const result = await deleteChannel(channel_id);
-    res.status(200).json({ message: "success! removed channel", result });
+    res.status(201).json({
+      message: "success! channel deleted",
+      channelId: result.channelId,
+    });
   } catch (error) {
-    console.error("error removing channel:", error);
-    if (error.message === "couldn't find this channel") {
-      res.status(404).json({ error: "channel not found" });
-    } else {
-      res.status(500).json({ error: "internal server error" });
-    }
+    console.error("error deleting channel:", error);
+    res.status(500).json({ error: "internal server error" });
   }
 }
 
