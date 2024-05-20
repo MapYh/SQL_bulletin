@@ -5,6 +5,7 @@ const {
 } = require("../models/channel-model");
 const database = require("../database/db");
 const db = database.initDatabase();
+const { getUserId } = require("../models/subscription-model");
 
 async function createChannel(req, res) {
   const { channel_name, channel_owner_id } = req.body;
@@ -13,6 +14,12 @@ async function createChannel(req, res) {
     return res.status(400).json({
       error: "required fields channel_name and channel_owner_id missing",
     });
+  }
+
+  //kontrollera användaren finns i databasen
+  const userExists = await getUserId(channel_owner_id);
+  if (!userExists) {
+    return res.status(404).json({ error: "User not found" });
   }
 
   try {
@@ -32,9 +39,9 @@ async function removeChannel(req, res) {
   console.log("removeChannel function called");
   console.log("Request body:", req.body);
 
-  if (!channel_id) {
+  if (!channel_id || !user_id) {
     return res.status(400).json({
-      error: "required field channel_id is missing",
+      error: "required field channel_id or user_id is missing",
     });
   }
 
