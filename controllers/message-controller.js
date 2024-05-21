@@ -1,15 +1,17 @@
+const { isChannelOwner, getChannelIdByMessageId } = require("../models/channel-model");
 const {
   insertMessage,
   getMessagesByChannel,
-  getChannelIdByMessageId,
   editMessageById,
   isMessageAuthor,
+  deleteMessageById,
 } = require("../models/message-model");
 const { getChannelId, getUserId, checkSubscription } = require("../models/subscription-model");
 
 async function postMessage(req, res) {
-  const { user_id, channel_id, title, content } = req.body;
-
+  const { channel_id, title, content } = req.body;
+  const user_id = req.user.id;
+  
   if (!user_id || !channel_id || !title || !content || title.length > 50) {
     return res.status(400).json({
       error: "User ID, Channel ID, title and content are required, and title must be less than 50 characters",
@@ -93,4 +95,28 @@ async function updateMessage(req, res) {
   }
 }
 
-module.exports = { postMessage, getMessages, updateMessage };
+async function removeMessage(req, res) {
+  const message_id = req.params.id;
+  const user_id = req.user.id;
+
+  try {
+    const channel_id = await getChannelIdByMessageId(message_id);
+    if (!channel_id) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    const isAuthor = await isMessageAuthor(message_id, user_id);
+    const isOwner = await isChannelOwner(user_id, channel_id);
+    if (!isAuthor && !isOwner) {
+      return res.status(403).json({ error: "User is not authorized to delete this message" });
+    }
+
+    await deleteMessageById(message_id);
+    res.status(200).json({ message: `Message with id ${message_id} deleted successfully` });
+  } catch (error) {
+    console.error("Error deleting message", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+module.exports = { postMessage, getMessages, updateMessage, removeMessage };

@@ -86,4 +86,16 @@ async function editMessageById(message_id, title, content) {
   });
 }
 
-module.exports = { insertMessage, getMessagesByChannel, editMessageById, isMessageAuthor };
+async function deleteMessageById(message_id) {
+  return new Promise((resolve, reject) => {
+    db.run(`DELETE FROM messages WHERE message_id = ?`, [message_id], (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ changes: this.changes });
+      }
+    });
+  });
+}
+
+module.exports = { insertMessage, getMessagesByChannel, editMessageById, isMessageAuthor, deleteMessageById };
