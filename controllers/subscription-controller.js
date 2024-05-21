@@ -54,7 +54,8 @@ async function getAUserById(req, res) {
     } else {
       res.status(200).json({
         message: "Success",
-        User: user,
+        User_id: user.User_id,
+        User_name: user.User_name,
       });
     }
   } catch (error) {
