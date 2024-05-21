@@ -6,6 +6,7 @@ const { auth } = require("../middleware/auth");
 const {
   createChannel,
   removeChannel,
+  getAllChannels,
 } = require("../controllers/channel-controller.js");
 const {
   unsubscription,
@@ -21,7 +22,7 @@ const router = Router();
 
 /*-------GET----------- */
 
-//GET all channels by channel name.
+//GET all channels.
 router.get("/", auth, getAllChannels);
 
 //POST a new channel
