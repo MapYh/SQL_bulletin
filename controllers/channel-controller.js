@@ -2,6 +2,7 @@ const {
   addNewChannel,
   deleteChannel,
   isChannelOwner,
+  getChannels,
 } = require("../models/channel-model");
 const database = require("../database/db");
 const db = database.initDatabase();
