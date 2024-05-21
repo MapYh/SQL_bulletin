@@ -46,7 +46,6 @@ async function getAUserById(req, res) {
   const { user_id } = req.body;
   try {
     const user = await getUserId(user_id);
-    console.log(user);
     if (!user) {
       res.status(400).json({
         message: "Could not find user.",
@@ -54,8 +53,8 @@ async function getAUserById(req, res) {
     } else {
       res.status(200).json({
         message: "Success",
-        User_id: user.User_id,
-        User_name: user.User_name,
+        User_id: user.user_id,
+        User_name: user.user_name,
       });
     }
   } catch (error) {
