@@ -18,6 +18,18 @@ function addNewChannel(channel_name, channel_owner_id) {
   });
 }
 
+function getChannels() {
+  return new Promise((resolve, reject) => {
+    db.all("SELECT channel_name FROM channels", function (error, rows) {
+      if (error) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
 function getChannelIdByMessageId(message_id) {
   return new Promise((resolve, reject) => {
     db.get(
@@ -80,4 +92,5 @@ module.exports = {
   isChannelOwner,
   getChannelIdByMessageId,
   deleteChannel,
+  getChannels,
 };

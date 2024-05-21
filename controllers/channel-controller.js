@@ -2,6 +2,7 @@ const {
   addNewChannel,
   deleteChannel,
   isChannelOwner,
+  getChannels,
 } = require("../models/channel-model");
 const database = require("../database/db");
 const db = database.initDatabase();
@@ -29,6 +30,17 @@ async function createChannel(req, res) {
       .json({ message: "success! added channel", channelId: result.channelId });
   } catch (error) {
     console.error("error adding channel:", error);
+    res.status(500).json({ error: "internal server error" });
+  }
+}
+
+async function getAllChannels(req, res) {
+  const result = await getChannels();
+  try {
+    const result = await getChannels();
+    res.status(201).json({ message: "success!", Channels: result });
+  } catch (error) {
+    console.error("error getting users:", error);
     res.status(500).json({ error: "internal server error" });
   }
 }
@@ -115,4 +127,4 @@ async function removeChannel(req, res) {
   }
 }
 
-module.exports = { createChannel, removeChannel };
+module.exports = { createChannel, removeChannel, getAllChannels };
